@@ -8,12 +8,22 @@ const MainTitle = styled.h1`
   color: ${colors.white};
 `;
 
-const Container = styled.div`
+const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
   margin: 160px auto 0 auto;
+  padding: 0 20px;
+  width: 100%;
+`;
+
+const SignUpContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin: 100px auto 0 auto;
   padding: 0 20px;
   width: 100%;
 `;
@@ -39,6 +49,17 @@ const StyledButton = styled.button`
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 20px;
+  cursor: pointer;
+`;
+
+const InvalidDataWarning = styled.span`
+  color: ${colors.red};
+  display: block;
+  align-self: center;
+  margin-bottom: 10px;
+  font-size: 18px;
+  text-decoration: underline;
+  text-align: center;
 `;
 
 const StyledLink = styled.span`
@@ -47,4 +68,12 @@ const StyledLink = styled.span`
   color: ${colors.white};
 `;
 
-export { MainTitle, Container, FormField, StyledLink, StyledButton };
+export {
+  MainTitle,
+  LoginContainer,
+  SignUpContainer,
+  FormField,
+  InvalidDataWarning,
+  StyledLink,
+  StyledButton,
+};

@@ -4,8 +4,8 @@ function serverLogin(user) {
   return;
 }
 
-function signUp(user) {
+function registerUser(user) {
   return;
 }
 
-export { serverLogin };
+export { serverLogin, registerUser };

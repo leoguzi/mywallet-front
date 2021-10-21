@@ -5,8 +5,9 @@ import { serverLogin } from "../services/api.service";
 import Loader from "react-loader-spinner";
 import {
   MainTitle,
-  Container,
+  LoginContainer,
   FormField,
+  InvalidDataWarning,
   StyledLink,
   StyledButton,
 } from "./controlOfAccesStyles";
@@ -16,6 +17,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(false);
+  const [invalidData, setInvalidData] = useState(false);
   const history = useHistory();
 
   function handleSubmit(e) {
@@ -27,7 +29,7 @@ export default function Login() {
         .then((res) => login(res.data))
         .catch((e) => console.log(e.response.status));
     } else {
-      alert("Digite todos os dados!");
+      setInvalidData(true);
       setDisabled(false);
     }
   }
@@ -39,22 +41,27 @@ export default function Login() {
   }
 
   return (
-    <Container>
+    <LoginContainer>
       <MainTitle>MyWallet</MainTitle>
       <form onSubmit={handleSubmit}>
         <FormField
+          disabled={disabled}
           type="email"
           placeholder="E-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-        ></FormField>
+        />
         <FormField
+          disabled={disabled}
           type="password"
           placeholder="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-        ></FormField>
-        <StyledButton>
+        />
+        <InvalidDataWarning>
+          {invalidData ? "Verifique os dados!" : ""}
+        </InvalidDataWarning>
+        <StyledButton disabled={disabled}>
           {disabled ? (
             <Loader type="ThreeDots" color="#ffffff" height="45px" />
           ) : (
@@ -65,6 +72,6 @@ export default function Login() {
       <Link to="/sign-up">
         <StyledLink>Primeira vez? Cadastre-se!</StyledLink>
       </Link>
-    </Container>
+    </LoginContainer>
   );
 }
