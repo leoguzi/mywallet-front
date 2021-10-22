@@ -10,7 +10,7 @@ import {
   InvalidDataWarning,
   StyledLink,
   StyledButton,
-} from "./controlOfAccesStyles";
+} from "../CommonStyles";
 
 export default function Login() {
   const { setUser } = useContext(userContext);
@@ -27,8 +27,15 @@ export default function Login() {
       const userData = { email, password };
       serverLogin(userData)
         .then((res) => login(res.data))
-        .catch((e) => console.log(e.response.status));
+        .catch(handleError);
     } else {
+      setInvalidData(true);
+      setDisabled(false);
+    }
+  }
+
+  function handleError(e) {
+    if (e.response.status === 404) {
       setInvalidData(true);
       setDisabled(false);
     }

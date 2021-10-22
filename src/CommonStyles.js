@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colors } from "../globalStyles";
+import { colors } from "./globalStyles";
 
 const MainTitle = styled.h1`
   font-family: "Saira Stencil One", cursive;
@@ -68,6 +68,12 @@ const StyledLink = styled.span`
   color: ${colors.white};
 `;
 
+const StyledTitle = styled.h1`
+  color: ${colors.white};
+  font-size: 26px;
+  font-weight: bold;
+`;
+
 export {
   MainTitle,
   LoginContainer,
@@ -76,4 +82,5 @@ export {
   InvalidDataWarning,
   StyledLink,
   StyledButton,
+  StyledTitle,
 };

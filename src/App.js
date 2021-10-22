@@ -1,10 +1,10 @@
 import { GlobalStyle } from "./globalStyles";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useState } from "react";
-import Login from "./controlOfAcces/Login";
-import SignUp from "./controlOfAcces/signUp";
-import NewEntry from "./NewEntry";
-import Main from "./Main";
+import Login from "./components/Login";
+import SignUp from "./components/signUp";
+import NewEntry from "./components/NewEntry";
+import Main from "./components/Main";
 import UserContext from "./contexts/UserContext";
 
 function App() {

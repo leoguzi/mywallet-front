@@ -9,33 +9,39 @@ import {
   StyledLink,
   StyledButton,
   InvalidDataWarning,
-} from "./controlOfAccesStyles";
+} from "../CommonStyles";
 
 export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [invalidData, setInvalidData] = useState(false);
+  const [usedEmail, setUsedEmail] = useState(false);
   const history = useHistory();
 
   function handleSubmit(e) {
     e.preventDefault();
     setDisabled(true);
-    const passwordMatch = password === confirmPassword;
-    if (name && email && password && confirmPassword && passwordMatch) {
+    const passwordMatch = password === passwordConfirm;
+    if (name && email && password && passwordConfirm && passwordMatch) {
       const userData = {
         name,
         email,
         password,
-        confirmPassword,
+        passwordConfirm,
       };
-      registerUser(userData)
-        .then(() => redirect)
-        .catch((e) => console.log(e.response.status));
+      registerUser(userData).then(redirect).catch(handleError);
     } else {
       setInvalidData(true);
+      setDisabled(false);
+    }
+  }
+
+  function handleError(e) {
+    if (e.response.status === 409) {
+      setUsedEmail(true);
       setDisabled(false);
     }
   }
@@ -63,6 +69,9 @@ export default function SignUp() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        <InvalidDataWarning>
+          {usedEmail ? "Email já cadastrado!" : ""}
+        </InvalidDataWarning>
         <FormField
           disabled={disabled}
           type="password"
@@ -74,8 +83,8 @@ export default function SignUp() {
           disabled={disabled}
           type="password"
           placeholder="Confirme a senha"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
         />
         <InvalidDataWarning>
           {invalidData ? "Verifique os dados!" : ""}
