@@ -65,9 +65,9 @@ export default function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <InvalidDataWarning>
-          {invalidData ? "Verifique os dados!" : ""}
-        </InvalidDataWarning>
+        {invalidData && (
+          <InvalidDataWarning>Verifique os dados! </InvalidDataWarning>
+        )}
         <StyledButton disabled={disabled}>
           {disabled ? (
             <Loader type="ThreeDots" color="#ffffff" height="45px" />

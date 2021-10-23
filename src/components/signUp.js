@@ -69,9 +69,9 @@ export default function SignUp() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <InvalidDataWarning>
-          {usedEmail ? "Email já cadastrado!" : ""}
-        </InvalidDataWarning>
+        {usedEmail && (
+          <InvalidDataWarning>Email já cadastrado! </InvalidDataWarning>
+        )}
         <FormField
           disabled={disabled}
           type="password"

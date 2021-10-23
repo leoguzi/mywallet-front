@@ -1,33 +1,41 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import styled from "styled-components";
 import UserContext from "../contexts/UserContext";
 import { colors } from "../globalStyles";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
-import { activeLogout } from "../services/api.service";
+import { activeLogout, fetchEntries } from "../services/api.service";
 
 export default function Main() {
-  const entries = [
+  const MochEntries = [
     {
       date: "04/09",
       description: "Almoço mãe",
-      value: 32.9,
+      value: 3290,
     },
     {
       date: "04/09",
       description: "Almoço eu ",
-      value: -25.9,
+      value: -2590,
     },
     {
       date: "04/09",
       description: "Salario",
-      value: 5300.0,
+      value: 530000,
     },
   ];
   const { user } = useContext(UserContext);
   const firstName = user.name.split(" ")[0];
   const history = useHistory();
+  const [entries, setEntries] = useState(MochEntries);
+  const [balance, setBalance] = useState("5300000");
+
+  useEffect(() => {
+    fetchEntries(user.token)
+      .then((r) => setEntries(r.data.entries))
+      .catch((e) => console.log(e.response.status));
+  }, [entries, user.token]);
 
   function logout() {
     activeLogout({ token: user.token }).then(history.push("/"));
@@ -48,14 +56,14 @@ export default function Main() {
               <Date>{entrie.date}</Date>{" "}
               <Description>{entrie.description}</Description>{" "}
               <Value negative={entrie.value < 0 ? true : false}>
-                {entrie.value}
+                {(Number(entrie.value) / 100).toFixed(2).replace(".", ",")}
               </Value>
             </StyledLi>
           ))
         )}
         <Balance>
           <span>Saldo</span>
-          <Value>203659</Value>
+          <Value>{(Number(balance) / 100).toFixed(2).replace(".", ",")}</Value>
         </Balance>
       </DataList>
       <Container>
