@@ -7,6 +7,7 @@ const colors = {
   black: "000000",
   green: "#03AC00",
   red: "#C70000",
+  grey: "#868686",
 };
 
 const GlobalStyle = createGlobalStyle`

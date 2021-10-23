@@ -13,7 +13,7 @@ const LoginContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  margin: 160px auto 0 auto;
+  margin: 175px auto 0 auto;
   padding: 0 20px;
   width: 100%;
 `;
@@ -48,7 +48,7 @@ const StyledButton = styled.button`
   color: ${colors.white};
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   cursor: pointer;
 `;
 
@@ -68,10 +68,16 @@ const StyledLink = styled.span`
   color: ${colors.white};
 `;
 
-const StyledTitle = styled.h1`
+const EntryTitle = styled.h1`
+  padding: 0 25px;
+  margin-bottom: 15px;
   color: ${colors.white};
   font-size: 26px;
   font-weight: bold;
+  margin-top: 13px;
+`;
+const EntryForm = styled.form`
+  padding: 0 25px;
 `;
 
 export {
@@ -82,5 +88,6 @@ export {
   InvalidDataWarning,
   StyledLink,
   StyledButton,
-  StyledTitle,
+  EntryTitle,
+  EntryForm,
 };
