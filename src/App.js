@@ -8,7 +8,7 @@ import Main from "./components/Main";
 import UserContext from "./contexts/UserContext";
 
 function App() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   return (
     <BrowserRouter>
       <GlobalStyle />

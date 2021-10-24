@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import userContext from "../contexts/UserContext";
 import { Link, useHistory } from "react-router-dom";
 import { serverLogin } from "../services/api.service";
@@ -20,6 +20,14 @@ export default function Login() {
   const [invalidData, setInvalidData] = useState(false);
   const history = useHistory();
 
+  useEffect(() => {
+    const authUser = JSON.parse(localStorage.getItem("authUser"));
+    if (authUser) {
+      setUser(authUser);
+      history.push("/main");
+    }
+  }, [setUser, history]);
+
   function handleSubmit(e) {
     e.preventDefault();
     setDisabled(true);
@@ -35,7 +43,7 @@ export default function Login() {
   }
 
   function handleError(e) {
-    if (e.response.status === 404) {
+    if (e.response.status === 404 || e.response.status === 401) {
       setInvalidData(true);
       setDisabled(false);
     }
@@ -44,6 +52,7 @@ export default function Login() {
   function login(user) {
     setUser(user);
     setDisabled(false);
+    localStorage.setItem("authUser", JSON.stringify(user));
     history.push("/main");
   }
 

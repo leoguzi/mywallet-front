@@ -6,38 +6,32 @@ import { colors } from "../globalStyles";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 import { activeLogout, fetchEntries } from "../services/api.service";
+import dayjs from "dayjs";
 
 export default function Main() {
-  const MochEntries = [
-    {
-      date: "04/09",
-      description: "Almoço mãe",
-      value: 3290,
-    },
-    {
-      date: "04/09",
-      description: "Almoço eu ",
-      value: -2590,
-    },
-    {
-      date: "04/09",
-      description: "Salario",
-      value: 530000,
-    },
-  ];
-  const { user } = useContext(UserContext);
-  const firstName = user.name.split(" ")[0];
+  const { user, setUser } = useContext(UserContext);
   const history = useHistory();
-  const [entries, setEntries] = useState(MochEntries);
-  const [balance, setBalance] = useState("5300000");
+  const firstName = user?.name.split(" ")[0];
+  const [entries, setEntries] = useState([]);
+  const [balance, setBalance] = useState(0);
 
   useEffect(() => {
-    fetchEntries(user.token)
-      .then((r) => setEntries(r.data.entries))
-      .catch((e) => console.log(e.response.status));
-  }, [entries, user.token]);
+    if (!user) {
+      const authUser = JSON.parse(localStorage.getItem("authUser"));
+      authUser ? setUser(authUser) : history.push("/");
+    }
+    if (user) {
+      fetchEntries(user.token)
+        .then((r) => {
+          setEntries(r.data.entries);
+          setBalance(r.data.balance);
+        })
+        .catch((e) => console.log(e.response.status));
+    }
+  }, [user, setUser, history]);
 
   function logout() {
+    localStorage.removeItem("authUser");
     activeLogout({ token: user.token }).then(history.push("/"));
   }
 
@@ -47,25 +41,29 @@ export default function Main() {
         <StyledTitle>{`Olá, ${firstName}`}</StyledTitle>
         <LogoutIcon onClick={() => logout()} />
       </Container>
-      <DataList>
-        {entries.length === 0 ? (
-          <NoEntries>Não há registros de entrada ou saída</NoEntries>
-        ) : (
-          entries.map((entrie) => (
-            <StyledLi>
-              <Date>{entrie.date}</Date>{" "}
-              <Description>{entrie.description}</Description>{" "}
-              <Value negative={entrie.value < 0 ? true : false}>
-                {(Number(entrie.value) / 100).toFixed(2).replace(".", ",")}
-              </Value>
-            </StyledLi>
-          ))
-        )}
+      <div>
+        <DataList>
+          {entries.length === 0 ? (
+            <NoEntries>Não há registros de entrada ou saída</NoEntries>
+          ) : (
+            entries.map((entrie, index) => (
+              <StyledLi key={index}>
+                <StyledDate>{dayjs(entrie.date).format("DD/MM")}</StyledDate>{" "}
+                <Description>{entrie.description}</Description>{" "}
+                <Value negative={entrie.value < 0 ? true : false}>
+                  {(Number(entrie.value) / 100).toFixed(2).replace(".", ",")}
+                </Value>
+              </StyledLi>
+            ))
+          )}
+        </DataList>
         <Balance>
           <span>Saldo</span>
-          <Value>{(Number(balance) / 100).toFixed(2).replace(".", ",")}</Value>
+          <Value negative={balance < 0 ? true : false}>
+            {(Number(balance) / 100).toFixed(2).replace(".", ",")}
+          </Value>
         </Balance>
-      </DataList>
+      </div>
       <Container>
         <StyledLink to="/new-entry/income">
           <SquareButton>
@@ -107,38 +105,51 @@ const DataList = styled.ul`
   position: relative;
   background-color: ${colors.white};
   margin: 13px 25px 0 25px;
-  padding-top: 10px;
-  height: 70vh;
-  border-radius: 5px;
+  padding-top: 5px;
+  height: 65vh;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  overflow: hidden;
+  overflow-y: scroll;
 `;
 const StyledLi = styled.li`
   margin: 10px;
   position: relative;
   width: inherit;
+  height: 20px;
   display: flex;
   span {
     font-size: 16px;
   }
 `;
-const Date = styled.span`
+const StyledDate = styled.span`
   color: ${colors.grey};
   margin-right: 10px;
 `;
 
-const Description = styled.span``;
+const Description = styled.span`
+  width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
 
 const Value = styled.span`
   color: ${(props) => (props.negative ? colors.red : colors.green)};
   position: absolute;
-  right: 10px;
+  right: 8px;
 `;
 
 const Balance = styled.div`
-  position: absolute;
-  width: 95%;
   display: flex;
-  bottom: 10px;
-  left: 10px;
+  position: relative;
+  margin: 0 25px;
+  padding-left: 10px;
+  height: 35px;
+  align-items: center;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: ${colors.white};
   span:first-child {
     font-size: 18px;
     font-weight: bold;

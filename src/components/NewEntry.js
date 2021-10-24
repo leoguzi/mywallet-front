@@ -1,5 +1,5 @@
 import { useHistory, useParams } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { registerEntry } from "../services/api.service";
 import UserContext from "../contexts/UserContext";
 import Loader from "react-loader-spinner";
@@ -18,16 +18,26 @@ export default function NewEntry() {
   const [description, setDescription] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [invalidData, setInvalidData] = useState(false);
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   if (type !== "income" && type !== "outcome") {
     history.push("/main");
   }
 
+  useEffect(() => {
+    if (!user) {
+      const authUser = JSON.parse(localStorage.getItem("authUser"));
+      authUser ? setUser(authUser) : history.push("/");
+    }
+  }, [user, setUser, history]);
+
   function handleSubmit(e) {
     e.preventDefault();
     setDisabled(true);
-    const finalNumber = Number(value.replace(",", ".")) * 100;
+    let finalNumber = Number(value.replace(",", ".")) * 100;
+    if (type === "outcome") {
+      finalNumber = finalNumber * -1;
+    }
     if (finalNumber === 0 || isNaN(finalNumber) || description.length === 0) {
       setInvalidData(true);
       setDisabled(false);
