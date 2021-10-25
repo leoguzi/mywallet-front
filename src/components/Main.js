@@ -51,7 +51,10 @@ export default function Main() {
                 <StyledDate>{dayjs(entrie.date).format("DD/MM")}</StyledDate>{" "}
                 <Description>{entrie.description}</Description>{" "}
                 <Value negative={entrie.value < 0 ? true : false}>
-                  {(Number(entrie.value) / 100).toFixed(2).replace(".", ",")}
+                  {(Number(entrie.value) / 100)
+                    .toFixed(2)
+                    .replace(".", ",")
+                    .replace("-", "")}
                 </Value>
               </StyledLi>
             ))
@@ -60,7 +63,10 @@ export default function Main() {
         <Balance>
           <span>Saldo</span>
           <Value negative={balance < 0 ? true : false}>
-            {(Number(balance) / 100).toFixed(2).replace(".", ",")}
+            {(Number(balance) / 100)
+              .toFixed(2)
+              .replace(".", ",")
+              .replace("-", "")}
           </Value>
         </Balance>
       </div>

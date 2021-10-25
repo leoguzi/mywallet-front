@@ -17,14 +17,25 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [disabled, setDisabled] = useState(false);
-  const [invalidData, setInvalidData] = useState(false);
-  const [usedEmail, setUsedEmail] = useState(false);
+  const [invalidData, setInvalidData] = useState({
+    name: false,
+    email: false,
+    password: false,
+    passwordConfirm: false,
+  });
+
   const history = useHistory();
 
   function handleSubmit(e) {
     e.preventDefault();
     setDisabled(true);
     const passwordMatch = password === passwordConfirm;
+    if (!passwordMatch) {
+      setInvalidData({ ...invalidData, passwordConfirm: true });
+    }
+    if (name.length < 3) {
+      setInvalidData({ ...invalidData, name: true });
+    }
     if (name && email && password && passwordConfirm && passwordMatch) {
       const userData = {
         name,
@@ -34,14 +45,13 @@ export default function SignUp() {
       };
       registerUser(userData).then(redirect).catch(handleError);
     } else {
-      setInvalidData(true);
       setDisabled(false);
     }
   }
 
   function handleError(e) {
     if (e.response.status === 409) {
-      setUsedEmail(true);
+      setInvalidData({ ...invalidData, email: true });
       setDisabled(false);
     }
   }
@@ -60,17 +70,30 @@ export default function SignUp() {
           type="text"
           value={name}
           placeholder="Nome"
-          onChange={(e) => setName(e.target.value)}
+          invalid={invalidData.name}
+          onChange={(e) => {
+            setName(e.target.value);
+            setInvalidData({ ...invalidData, name: false });
+          }}
         />
+        {invalidData.name && (
+          <InvalidDataWarning>
+            Nome deve ter mais de 3 caracteres!
+          </InvalidDataWarning>
+        )}
         <FormField
           disabled={disabled}
           type="email"
           placeholder="E-mail"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          invalid={invalidData.email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setInvalidData({ ...invalidData, email: false });
+          }}
         />
-        {usedEmail && (
-          <InvalidDataWarning>Email já cadastrado! </InvalidDataWarning>
+        {invalidData.email && (
+          <InvalidDataWarning>Email já cadastrado!</InvalidDataWarning>
         )}
         <FormField
           disabled={disabled}
@@ -84,11 +107,15 @@ export default function SignUp() {
           type="password"
           placeholder="Confirme a senha"
           value={passwordConfirm}
-          onChange={(e) => setPasswordConfirm(e.target.value)}
+          invalid={invalidData.passwordConfirm}
+          onChange={(e) => {
+            setPasswordConfirm(e.target.value);
+            setInvalidData({ ...invalidData, passwordConfirm: false });
+          }}
         />
-        <InvalidDataWarning>
-          {invalidData ? "Verifique os dados!" : ""}
-        </InvalidDataWarning>
+        {invalidData.passwordConfirm && (
+          <InvalidDataWarning>As senhas não coincidem!</InvalidDataWarning>
+        )}
         <StyledButton disabled={disabled}>
           {disabled ? (
             <Loader type="ThreeDots" color="#ffffff" height="45px" />

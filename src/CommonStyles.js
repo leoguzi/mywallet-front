@@ -32,11 +32,14 @@ const FormField = styled.input`
   width: 100%;
   height: 58px;
   border-radius: 6px;
-  border: none;
+  border: ${(props) =>
+    props.invalid ? `solid 2px ${colors.darkred}` : "none"};
   margin-bottom: 10px;
   padding-left: 10px;
   color: ${colors.black};
   font-size: 20px;
+  background-color: ${(props) =>
+    props.invalid ? `${colors.ligthred}` : `${colors.white}`};
 `;
 
 const StyledButton = styled.button`
@@ -53,7 +56,7 @@ const StyledButton = styled.button`
 `;
 
 const InvalidDataWarning = styled.span`
-  color: ${colors.red};
+  color: ${colors.darkred};
   display: block;
   align-self: center;
   margin-bottom: 10px;

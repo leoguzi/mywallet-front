@@ -7,6 +7,8 @@ const colors = {
   black: "000000",
   green: "#03AC00",
   red: "#C70000",
+  darkred: "#750000",
+  ligthred: "#ff8484",
   grey: "#868686",
 };
 

@@ -17,7 +17,10 @@ export default function NewEntry() {
   const [value, setValue] = useState("");
   const [description, setDescription] = useState("");
   const [disabled, setDisabled] = useState(false);
-  const [invalidData, setInvalidData] = useState(false);
+  const [invalidData, setInvalidData] = useState({
+    value: false,
+    description: false,
+  });
   const { user, setUser } = useContext(UserContext);
 
   if (type !== "income" && type !== "outcome") {
@@ -39,18 +42,25 @@ export default function NewEntry() {
       finalNumber = finalNumber * -1;
     }
     if (finalNumber === 0 || isNaN(finalNumber) || description.length === 0) {
-      setInvalidData(true);
+      setInvalidData({ ...invalidData, value: true });
       setDisabled(false);
     } else {
       const entry = {
         value: finalNumber,
         description,
       };
-      registerEntry(user.token, entry);
-      history.push("/main");
+      registerEntry(user.token, entry)
+        .then(() => history.push("/main"))
+        .catch(handleError);
     }
   }
-
+  function handleError(e) {
+    const status = e.response.status;
+    if (status === 403) {
+      setInvalidData({ ...invalidData, description: true });
+    }
+    setDisabled(false);
+  }
   return (
     <>
       <EntryTitle>Nova {type === "income" ? " entrada" : " saída"}</EntryTitle>
@@ -59,16 +69,31 @@ export default function NewEntry() {
           disbled={disabled}
           placeholder="Valor"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
-        ></FormField>
+          invalid={invalidData.value}
+          onChange={(e) => {
+            setValue(e.target.value);
+            setInvalidData({ ...invalidData, value: false });
+          }}
+        />
+        {invalidData.value && (
+          <InvalidDataWarning>
+            Deve ser um número maior que 0!
+          </InvalidDataWarning>
+        )}
         <FormField
           disbled={disabled}
           placeholder="Descrição"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        ></FormField>
-        {invalidData && (
-          <InvalidDataWarning>Verifique os dados inseridos!</InvalidDataWarning>
+          invalid={invalidData.description}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            setInvalidData({ ...invalidData, description: false });
+          }}
+        />
+        {invalidData.description && (
+          <InvalidDataWarning>
+            Deve ter menos que 50 caracteres!
+          </InvalidDataWarning>
         )}
         <StyledButton disbled={disabled}>
           {disabled ? (

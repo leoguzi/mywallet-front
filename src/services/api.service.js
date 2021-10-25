@@ -22,7 +22,7 @@ function registerUser(user) {
 }
 
 function registerEntry(token, entry) {
-  axios.post(API_URL + "entries", entry, authConfig(token));
+  return axios.post(API_URL + "entries", entry, authConfig(token));
 }
 
 function fetchEntries(token) {

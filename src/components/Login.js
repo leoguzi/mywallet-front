@@ -17,7 +17,10 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(false);
-  const [invalidData, setInvalidData] = useState(false);
+  const [invalidData, setInvalidData] = useState({
+    email: false,
+    password: false,
+  });
   const history = useHistory();
 
   useEffect(() => {
@@ -43,10 +46,13 @@ export default function Login() {
   }
 
   function handleError(e) {
-    if (e.response.status === 404 || e.response.status === 401) {
-      setInvalidData(true);
-      setDisabled(false);
+    const status = e.response.status;
+    if (status === 404) {
+      setInvalidData({ invalidData, email: true });
+    } else if (status === 401) {
+      setInvalidData({ ...invalidData, password: true });
     }
+    setDisabled(false);
   }
 
   function login(user) {
@@ -65,17 +71,28 @@ export default function Login() {
           type="email"
           placeholder="E-mail"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          invalid={invalidData.email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setInvalidData({ invalidData, email: false });
+          }}
         />
+        {invalidData.email && (
+          <InvalidDataWarning>Email não encontrado! </InvalidDataWarning>
+        )}
         <FormField
           disabled={disabled}
           type="password"
           placeholder="Senha"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          invalid={invalidData.password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setInvalidData({ invalidData, password: false });
+          }}
         />
-        {invalidData && (
-          <InvalidDataWarning>Verifique os dados! </InvalidDataWarning>
+        {invalidData.password && (
+          <InvalidDataWarning>Senha inválida! </InvalidDataWarning>
         )}
         <StyledButton disabled={disabled}>
           {disabled ? (
