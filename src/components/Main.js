@@ -6,6 +6,7 @@ import { colors } from "../globalStyles";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 import { activeLogout, fetchEntries } from "../services/api.service";
+import { VscLoading } from "react-icons/vsc";
 import dayjs from "dayjs";
 
 export default function Main() {
@@ -14,6 +15,7 @@ export default function Main() {
   const firstName = user?.name.split(" ")[0];
   const [entries, setEntries] = useState([]);
   const [balance, setBalance] = useState(0);
+  const [finishedLoading, setFinishLoading] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -25,6 +27,7 @@ export default function Main() {
         .then((r) => {
           setEntries(r.data.entries);
           setBalance(r.data.balance);
+          setFinishLoading(true);
         })
         .catch((e) => console.log(e.response.status));
     }
@@ -43,7 +46,8 @@ export default function Main() {
       </Container>
       <div>
         <DataList>
-          {entries.length === 0 ? (
+          {!finishedLoading && <Loader />}
+          {finishedLoading && entries.length === 0 ? (
             <NoEntries>Não há registros de entrada ou saída</NoEntries>
           ) : (
             entries.map((entrie, index) => (
@@ -212,4 +216,23 @@ const Plus = styled(AiOutlinePlusCircle)`
 
 const StyledLink = styled(Link)`
   width: 48%;
+`;
+
+const Loader = styled(VscLoading)`
+  height: 150px;
+  width: 150px;
+  animation: rotation 0.5s infinite linear;
+  color: ${colors.clearPurple};
+  position: absolute;
+  left: 25%;
+  top: 35%;
+
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
 `;
