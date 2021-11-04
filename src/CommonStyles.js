@@ -56,7 +56,7 @@ const StyledButton = styled.button`
 `;
 
 const InvalidDataWarning = styled.span`
-  color: ${colors.darkred};
+  color: ${colors.back};
   display: block;
   align-self: center;
   margin-bottom: 10px;

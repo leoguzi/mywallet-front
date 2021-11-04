@@ -67,6 +67,7 @@ export default function Login() {
       <MainTitle>MyWallet</MainTitle>
       <form onSubmit={handleSubmit}>
         <FormField
+          required
           disabled={disabled}
           type="email"
           placeholder="E-mail"
@@ -81,6 +82,7 @@ export default function Login() {
           <InvalidDataWarning>Email não encontrado! </InvalidDataWarning>
         )}
         <FormField
+          required
           disabled={disabled}
           type="password"
           placeholder="Senha"

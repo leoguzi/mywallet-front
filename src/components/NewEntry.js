@@ -1,5 +1,5 @@
 import { useHistory, useParams } from "react-router-dom";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { registerEntry } from "../services/api.service";
 import UserContext from "../contexts/UserContext";
 import Loader from "react-loader-spinner";
@@ -21,27 +21,27 @@ export default function NewEntry() {
     value: false,
     description: false,
   });
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
-  if (type !== "income" && type !== "outcome") {
+  if ((type !== "income" && type !== "outcome") || !type) {
     history.push("/main");
   }
-
-  useEffect(() => {
-    if (!user) {
-      const authUser = JSON.parse(localStorage.getItem("authUser"));
-      authUser ? setUser(authUser) : history.push("/");
-    }
-  }, [user, setUser, history]);
 
   function handleSubmit(e) {
     e.preventDefault();
     setDisabled(true);
     let finalNumber = Number(value.replace(",", ".")) * 100;
-    if (type === "outcome") {
+    if (type === "outcome" && finalNumber > 0) {
       finalNumber = finalNumber * -1;
     }
-    if (finalNumber === 0 || isNaN(finalNumber) || description.length === 0) {
+    if (finalNumber < 0 && type === "income") {
+      setInvalidData({ ...invalidData, value: true });
+      setDisabled(false);
+    } else if (
+      finalNumber === 0 ||
+      isNaN(finalNumber) ||
+      description.length === 0
+    ) {
       setInvalidData({ ...invalidData, value: true });
       setDisabled(false);
     } else {
@@ -56,7 +56,7 @@ export default function NewEntry() {
   }
   function handleError(e) {
     const status = e.response.status;
-    if (status === 403) {
+    if (status === 400) {
       setInvalidData({ ...invalidData, description: true });
     }
     setDisabled(false);
@@ -77,7 +77,7 @@ export default function NewEntry() {
         />
         {invalidData.value && (
           <InvalidDataWarning>
-            Deve ser um número maior que 0!
+            Deve ser um número diferente de 0!
           </InvalidDataWarning>
         )}
         <FormField
@@ -92,7 +92,7 @@ export default function NewEntry() {
         />
         {invalidData.description && (
           <InvalidDataWarning>
-            Deve ter menos que 50 caracteres!
+            Deve ter pelo menos 3 e menos que 50 caracteres!
           </InvalidDataWarning>
         )}
         <StyledButton disbled={disabled}>

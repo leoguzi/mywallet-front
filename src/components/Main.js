@@ -10,7 +10,7 @@ import { VscLoading } from "react-icons/vsc";
 import dayjs from "dayjs";
 
 export default function Main() {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const history = useHistory();
   const firstName = user?.name.split(" ")[0];
   const [entries, setEntries] = useState([]);
@@ -18,10 +18,6 @@ export default function Main() {
   const [finishedLoading, setFinishLoading] = useState(false);
 
   useEffect(() => {
-    if (!user) {
-      const authUser = JSON.parse(localStorage.getItem("authUser"));
-      authUser ? setUser(authUser) : history.push("/");
-    }
     if (user) {
       fetchEntries(user.token)
         .then((r) => {
@@ -31,7 +27,7 @@ export default function Main() {
         })
         .catch((e) => console.log(e.response.status));
     }
-  }, [user, setUser, history]);
+  }, [user]);
 
   function logout() {
     localStorage.removeItem("authUser");
@@ -52,13 +48,14 @@ export default function Main() {
           ) : (
             entries.map((entrie, index) => (
               <StyledLi key={index}>
-                <StyledDate>{dayjs(entrie.date).format("DD/MM")}</StyledDate>{" "}
-                <Description>{entrie.description}</Description>{" "}
+                <StyledDate>{dayjs(entrie.date).format("DD/MM")}</StyledDate>
+                <Description>{entrie.description}</Description>
                 <Value negative={entrie.value < 0 ? true : false}>
-                  {(Number(entrie.value) / 100)
-                    .toFixed(2)
-                    .replace(".", ",")
-                    .replace("-", "")}
+                  {(entrie.value < 0 ? "- " : "+ ") +
+                    (Number(entrie.value) / 100)
+                      .toFixed(2)
+                      .replace(".", ",")
+                      .replace("-", "")}
                 </Value>
               </StyledLi>
             ))
