@@ -64,10 +64,11 @@ export default function Main() {
         <Balance>
           <span>Saldo</span>
           <Value negative={balance < 0 ? true : false}>
-            {(Number(balance) / 100)
-              .toFixed(2)
-              .replace(".", ",")
-              .replace("-", "")}
+            {(balance < 0 ? "- " : "+ ") +
+              (Number(balance) / 100)
+                .toFixed(2)
+                .replace(".", ",")
+                .replace("-", "")}
           </Value>
         </Balance>
       </div>

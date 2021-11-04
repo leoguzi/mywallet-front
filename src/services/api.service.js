@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://localhost:4000/";
+const API_URL = "https://mywalletleo.herokuapp.com/";
 
 function authConfig(token) {
   return {
