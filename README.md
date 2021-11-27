@@ -1,24 +1,25 @@
 # MyWallet
 
-An easy way of keeping on track of your financial habbits!
+An easy way of keeping on track of your financial habits!
 
 </br>
 
 <p  align='center'>
 </br>
-<img src="./src/assets/gratibox_front_page.png"/>
+<img src="./assets/mywallet.gif"/>
 </p>
 </br>
-Try it out now at https://gratibox-front-eight.vercel.app/
+Try it out now at https://mywallet-front-henna.vercel.app/
 
 ## About
 
-This is the front-end of an web application on which people can sign up to a delivery service that provides them with products such as incence, organic products and tea. A few of the implemented features:
+This is the front-end of an web application on which you can create an account and register your dayly incomes and ravenues.
+Features:
 
 - Sign Up;
 - Login;
-- Main page with information about the user's signature or the option to sign up for a new plan;
-- Sign up to a plan form;
+- Main page that shows a list of financial events and the user's balance;
+- Buttons for adding incomes or revenues;
 
 ## Technologies
 
@@ -34,9 +35,10 @@ The following tools and frameworks were used in the construction of the project:
 ## How to run
 
 1. Clone this repository
-2. Clone the back-end repository at https://github.com/leoguzi/gratibox-back
-3. Follow instructions to run back-end at https://github.com/leoguzi/gratibox-back
+2. Clone the back-end repository at https://github.com/leoguzi/mywallet-back
+3. Follow instructions to run back-end at https://github.com/leoguzi/mywallet-back
 4. Install dependencies
+5. Configure the api URL as shown on the .env.exemple file
 
 ```bash
 npm i
