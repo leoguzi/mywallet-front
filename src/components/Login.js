@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
-import userContext from "../contexts/UserContext";
-import { Link, useHistory } from "react-router-dom";
-import { serverLogin } from "../services/api.service";
-import Loader from "react-loader-spinner";
+import { useContext, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import Loader from 'react-loader-spinner';
+import userContext from '../contexts/UserContext';
+import { serverLogin } from '../services/api.service';
 import {
   MainTitle,
   LoginContainer,
@@ -10,12 +10,12 @@ import {
   InvalidDataWarning,
   StyledLink,
   StyledButton,
-} from "../CommonStyles";
+} from '../CommonStyles';
 
 export default function Login() {
-  const { setUser } = useContext(userContext);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { setUser, user } = useContext(userContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [invalidData, setInvalidData] = useState({
     email: false,
@@ -23,13 +23,26 @@ export default function Login() {
   });
   const history = useHistory();
 
-  useEffect(() => {
-    const authUser = JSON.parse(localStorage.getItem("authUser"));
-    if (authUser) {
-      setUser(authUser);
-      history.push("/main");
+  if (user) {
+    history.push('/main');
+  }
+
+  function login(loginData) {
+    setDisabled(false);
+    localStorage.setItem('authUser', JSON.stringify(loginData));
+    setUser(loginData);
+    history.push('/main');
+  }
+
+  function handleError(e) {
+    const { status } = e.response;
+    if (status === 404) {
+      setInvalidData({ invalidData, email: true });
+    } else if (status === 401) {
+      setInvalidData({ ...invalidData, password: true });
     }
-  }, [setUser, history]);
+    setDisabled(false);
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -45,32 +58,15 @@ export default function Login() {
     }
   }
 
-  function handleError(e) {
-    const status = e.response.status;
-    if (status === 404) {
-      setInvalidData({ invalidData, email: true });
-    } else if (status === 401) {
-      setInvalidData({ ...invalidData, password: true });
-    }
-    setDisabled(false);
-  }
-
-  function login(user) {
-    setUser(user);
-    setDisabled(false);
-    localStorage.setItem("authUser", JSON.stringify(user));
-    history.push("/main");
-  }
-
   return (
     <LoginContainer>
       <MainTitle>MyWallet</MainTitle>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleSubmit(e)}>
         <FormField
           required
           disabled={disabled}
-          type="email"
-          placeholder="E-mail"
+          type='email'
+          placeholder='E-mail'
           value={email}
           invalid={invalidData.email}
           onChange={(e) => {
@@ -84,8 +80,8 @@ export default function Login() {
         <FormField
           required
           disabled={disabled}
-          type="password"
-          placeholder="Senha"
+          type='password'
+          placeholder='Senha'
           value={password}
           invalid={invalidData.password}
           onChange={(e) => {
@@ -98,13 +94,13 @@ export default function Login() {
         )}
         <StyledButton disabled={disabled}>
           {disabled ? (
-            <Loader type="ThreeDots" color="#ffffff" height="45px" />
+            <Loader type='ThreeDots' color='#ffffff' height='45px' />
           ) : (
-            "Entrar"
+            'Entrar'
           )}
         </StyledButton>
       </form>
-      <Link to="/sign-up">
+      <Link to='/sign-up'>
         <StyledLink>Primeira vez? Cadastre-se!</StyledLink>
       </Link>
     </LoginContainer>

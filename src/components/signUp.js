@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { registerUser } from "../services/api.service";
-import Loader from "react-loader-spinner";
+import { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import Loader from 'react-loader-spinner';
+import { registerUser } from '../services/api.service';
 import {
   MainTitle,
   SignUpContainer,
@@ -9,14 +9,14 @@ import {
   StyledLink,
   StyledButton,
   InvalidDataWarning,
-} from "../CommonStyles";
+} from '../CommonStyles';
 
 export default function SignUp() {
   const [formFields, setFormFields] = useState({
-    name: "",
-    email: "",
-    password: "",
-    passwordConfirm: "",
+    name: '',
+    email: '',
+    password: '',
+    passwordConfirm: '',
   });
   const [disabled, setDisabled] = useState(false);
   const [invalidData, setInvalidData] = useState({
@@ -26,6 +26,18 @@ export default function SignUp() {
     passwordConfirm: false,
   });
   const history = useHistory();
+
+  function handleError(e) {
+    if (e.response.status === 409) {
+      setInvalidData({ ...invalidData, email: true });
+      setDisabled(false);
+    }
+  }
+
+  function redirect() {
+    setDisabled(false);
+    history.push('/');
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -56,18 +68,6 @@ export default function SignUp() {
     }
   }
 
-  function handleError(e) {
-    if (e.response.status === 409) {
-      setInvalidData({ ...invalidData, email: true });
-      setDisabled(false);
-    }
-  }
-
-  function redirect() {
-    setDisabled(false);
-    history.push("/");
-  }
-
   return (
     <SignUpContainer>
       <MainTitle>MyWallet</MainTitle>
@@ -75,9 +75,9 @@ export default function SignUp() {
         <FormField
           required
           disabled={disabled}
-          type="text"
+          type='text'
           value={formFields.name}
-          placeholder="Nome"
+          placeholder='Nome'
           invalid={invalidData.name}
           onChange={(e) => {
             setFormFields({ ...formFields, name: e.target.value });
@@ -92,8 +92,8 @@ export default function SignUp() {
         <FormField
           required
           disabled={disabled}
-          type="email"
-          placeholder="E-mail"
+          type='email'
+          placeholder='E-mail'
           value={formFields.email}
           invalid={invalidData.email}
           onChange={(e) => {
@@ -107,8 +107,8 @@ export default function SignUp() {
         <FormField
           required
           disabled={disabled}
-          type="password"
-          placeholder="Senha"
+          type='password'
+          placeholder='Senha'
           value={formFields.password}
           onChange={(e) =>
             setFormFields({ ...formFields, password: e.target.value })
@@ -117,8 +117,8 @@ export default function SignUp() {
         <FormField
           required
           disabled={disabled}
-          type="password"
-          placeholder="Confirme a senha"
+          type='password'
+          placeholder='Confirme a senha'
           value={formFields.passwordConfirm}
           invalid={invalidData.passwordConfirm}
           onChange={(e) => {
@@ -131,13 +131,13 @@ export default function SignUp() {
         )}
         <StyledButton disabled={disabled}>
           {disabled ? (
-            <Loader type="ThreeDots" color="#ffffff" height="45px" />
+            <Loader type='ThreeDots' color='#ffffff' height='45px' />
           ) : (
-            "Cadastrar"
+            'Cadastrar'
           )}
         </StyledButton>
       </form>
-      <Link to="/">
+      <Link to='/'>
         <StyledLink>Já tem uma conta? Entre agora!</StyledLink>
       </Link>
     </SignUpContainer>

@@ -1,15 +1,15 @@
-const { createGlobalStyle } = require("styled-components");
+const { createGlobalStyle } = require('styled-components');
 
 const colors = {
-  purple: "#8C11BE",
-  clearPurple: "#A328D6",
-  white: "#FFFFFF",
-  black: "000000",
-  green: "#03AC00",
-  red: "#C70000",
-  darkred: "#750000",
-  ligthred: "#ff8484",
-  grey: "#868686",
+  purple: '#8C11BE',
+  clearPurple: '#A328D6',
+  white: '#FFFFFF',
+  black: '000000',
+  green: '#03AC00',
+  red: '#C70000',
+  darkred: '#750000',
+  ligthred: '#ff8484',
+  grey: '#868686',
 };
 
 const GlobalStyle = createGlobalStyle`

@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import { colors } from "./globalStyles";
+import styled from 'styled-components';
+import { colors } from './globalStyles';
 
 const MainTitle = styled.h1`
-  font-family: "Saira Stencil One", cursive;
+  font-family: 'Saira Stencil One', cursive;
   margin-bottom: 20px;
   font-size: 32px;
   color: ${colors.white};
@@ -33,7 +33,7 @@ const FormField = styled.input`
   height: 58px;
   border-radius: 6px;
   border: ${(props) =>
-    props.invalid ? `solid 2px ${colors.darkred}` : "none"};
+    props.invalid ? `solid 2px ${colors.darkred}` : 'none'};
   margin-bottom: 10px;
   padding-left: 10px;
   color: ${colors.black};
@@ -56,12 +56,13 @@ const StyledButton = styled.button`
 `;
 
 const InvalidDataWarning = styled.span`
-  color: ${colors.back};
+  color: ${colors.white};
   display: block;
   align-self: center;
   margin-bottom: 10px;
-  font-size: 18px;
-  text-decoration: underline;
+  font-size: 16px;
+  letter-spacing: 0.6px;
+  font-weight: bold;
   text-align: center;
 `;
 

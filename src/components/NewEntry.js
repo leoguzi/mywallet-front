@@ -1,21 +1,21 @@
-import { useHistory, useParams } from "react-router-dom";
-import { useState, useContext } from "react";
-import { registerEntry } from "../services/api.service";
-import UserContext from "../contexts/UserContext";
-import Loader from "react-loader-spinner";
+import { useHistory, useParams } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import Loader from 'react-loader-spinner';
+import { registerEntry } from '../services/api.service';
+import UserContext from '../contexts/UserContext';
 import {
   FormField,
   StyledButton,
   EntryTitle,
   EntryForm,
   InvalidDataWarning,
-} from "../CommonStyles";
+} from '../CommonStyles';
 
 export default function NewEntry() {
   const history = useHistory();
   const { type } = useParams();
-  const [value, setValue] = useState("");
-  const [description, setDescription] = useState("");
+  const [value, setValue] = useState('');
+  const [description, setDescription] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [invalidData, setInvalidData] = useState({
     value: false,
@@ -23,23 +23,31 @@ export default function NewEntry() {
   });
   const { user } = useContext(UserContext);
 
-  if ((type !== "income" && type !== "outcome") || !type) {
-    history.push("/main");
+  if ((type !== 'income' && type !== 'outcome') || !type || !user) {
+    history.push('/main');
+  }
+
+  function handleError(e) {
+    const { status } = e.response;
+    if (status === 400) {
+      setInvalidData({ ...invalidData, description: true });
+    }
+    setDisabled(false);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
     setDisabled(true);
-    let finalNumber = Number(value.replace(",", ".")) * 100;
-    if (type === "outcome" && finalNumber > 0) {
-      finalNumber = finalNumber * -1;
+    let finalNumber = Number(value.replace(',', '.')) * 100;
+    if (type === 'outcome' && finalNumber > 0) {
+      finalNumber *= -1;
     }
-    if (finalNumber < 0 && type === "income") {
+    if (finalNumber < 0 && type === 'income') {
       setInvalidData({ ...invalidData, value: true });
       setDisabled(false);
     } else if (
       finalNumber === 0 ||
-      isNaN(finalNumber) ||
+      Number.isNaN(finalNumber) ||
       description.length === 0
     ) {
       setInvalidData({ ...invalidData, value: true });
@@ -50,24 +58,19 @@ export default function NewEntry() {
         description,
       };
       registerEntry(user.token, entry)
-        .then(() => history.push("/main"))
+        .then(() => history.push('/main'))
         .catch(handleError);
     }
   }
-  function handleError(e) {
-    const status = e.response.status;
-    if (status === 400) {
-      setInvalidData({ ...invalidData, description: true });
-    }
-    setDisabled(false);
-  }
+
   return (
     <>
-      <EntryTitle>Nova {type === "income" ? " entrada" : " saída"}</EntryTitle>
-      <EntryForm onSubmit={handleSubmit}>
+      <EntryTitle>Nova {type === 'income' ? ' entrada' : ' saída'}</EntryTitle>
+      <EntryForm onSubmit={(e) => handleSubmit(e)}>
         <FormField
+          required
           disbled={disabled}
-          placeholder="Valor"
+          placeholder='Valor'
           value={value}
           invalid={invalidData.value}
           onChange={(e) => {
@@ -81,8 +84,9 @@ export default function NewEntry() {
           </InvalidDataWarning>
         )}
         <FormField
+          required
           disbled={disabled}
-          placeholder="Descrição"
+          placeholder='Descrição'
           value={description}
           invalid={invalidData.description}
           onChange={(e) => {
@@ -97,12 +101,12 @@ export default function NewEntry() {
         )}
         <StyledButton disbled={disabled}>
           {disabled ? (
-            <Loader type="ThreeDots" color="#ffffff" height="45px" />
+            <Loader type='ThreeDots' color='#ffffff' height='45px' />
           ) : (
-            `Salvar ${type === "income" ? "entrada" : "saída"}`
+            `Salvar ${type === 'income' ? 'entrada' : 'saída'}`
           )}
         </StyledButton>
-        <StyledButton onClick={() => history.push("/main")}>
+        <StyledButton onClick={() => history.push('/main')}>
           Voltar
         </StyledButton>
       </EntryForm>

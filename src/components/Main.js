@@ -1,37 +1,38 @@
-import { useContext, useEffect, useState } from "react";
-import { useHistory, Link } from "react-router-dom";
-import styled from "styled-components";
-import UserContext from "../contexts/UserContext";
-import { colors } from "../globalStyles";
-import { RiLogoutBoxRLine } from "react-icons/ri";
-import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
-import { activeLogout, fetchEntries } from "../services/api.service";
-import { VscLoading } from "react-icons/vsc";
-import dayjs from "dayjs";
+import { useContext, useEffect, useState } from 'react';
+import { useHistory, Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { RiLogoutBoxRLine } from 'react-icons/ri';
+import { AiOutlinePlusCircle, AiOutlineMinusCircle } from 'react-icons/ai';
+import { VscLoading } from 'react-icons/vsc';
+import dayjs from 'dayjs';
+import { activeLogout, fetchEntries } from '../services/api.service';
+import { colors } from '../globalStyles';
+import UserContext from '../contexts/UserContext';
 
 export default function Main() {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const history = useHistory();
-  const firstName = user?.name.split(" ")[0];
+  const firstName = user.name?.split(' ')[0];
   const [entries, setEntries] = useState([]);
   const [balance, setBalance] = useState(0);
   const [finishedLoading, setFinishLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
-      fetchEntries(user.token)
-        .then((r) => {
-          setEntries(r.data.entries);
-          setBalance(r.data.balance);
-          setFinishLoading(true);
-        })
-        .catch((e) => console.log(e.response.status));
+      fetchEntries(user.token).then((r) => {
+        setEntries(r.data.entries);
+        setBalance(r.data.balance);
+        setFinishLoading(true);
+      });
+    } else {
+      history.push('/');
     }
-  }, [user]);
+  }, []);
 
   function logout() {
-    localStorage.removeItem("authUser");
-    activeLogout({ token: user.token }).then(history.push("/"));
+    localStorage.removeItem('authUser');
+    setUser(null);
+    activeLogout({ token: user.token }).then(history.push('/'));
   }
 
   return (
@@ -48,14 +49,14 @@ export default function Main() {
           ) : (
             entries.map((entrie, index) => (
               <StyledLi key={index}>
-                <StyledDate>{dayjs(entrie.date).format("DD/MM")}</StyledDate>
+                <StyledDate>{dayjs(entrie.date).format('DD/MM')}</StyledDate>
                 <Description>{entrie.description}</Description>
-                <Value negative={entrie.value < 0 ? true : false}>
-                  {(entrie.value < 0 ? "- " : "+ ") +
+                <Value negative={entrie.value < 0}>
+                  {(entrie.value < 0 ? '- ' : '+ ') +
                     (Number(entrie.value) / 100)
                       .toFixed(2)
-                      .replace(".", ",")
-                      .replace("-", "")}
+                      .replace('.', ',')
+                      .replace('-', '')}
                 </Value>
               </StyledLi>
             ))
@@ -63,23 +64,23 @@ export default function Main() {
         </DataList>
         <Balance>
           <span>Saldo</span>
-          <Value negative={balance < 0 ? true : false}>
-            {(balance < 0 ? "- " : "+ ") +
+          <Value negative={balance < 0}>
+            {(balance < 0 ? '- ' : '+ ') +
               (Number(balance) / 100)
                 .toFixed(2)
-                .replace(".", ",")
-                .replace("-", "")}
+                .replace('.', ',')
+                .replace('-', '')}
           </Value>
         </Balance>
       </div>
       <Container>
-        <StyledLink to="/new-entry/income">
+        <StyledLink to='/new-entry/income'>
           <SquareButton>
             <Plus />
             <ButtonText>Nova entrada</ButtonText>
           </SquareButton>
         </StyledLink>
-        <StyledLink to="/new-entry/outcome">
+        <StyledLink to='/new-entry/outcome'>
           <SquareButton>
             <Minus />
             <ButtonText>Nova saída</ButtonText>
