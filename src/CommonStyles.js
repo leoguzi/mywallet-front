@@ -13,7 +13,7 @@ const LoginContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  margin: 175px auto 0 auto;
+  margin: 30vh auto 0 auto;
   padding: 0 20px;
   width: 100%;
 `;
@@ -23,7 +23,7 @@ const SignUpContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  margin: 100px auto 0 auto;
+  margin: 18vh auto 0 auto;
   padding: 0 20px;
   width: 100%;
 `;
