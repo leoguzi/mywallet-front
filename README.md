@@ -13,7 +13,7 @@ Try it out now at https://mywallet-front-henna.vercel.app/
 
 ## About
 
-This is the front-end of an web application on which you can create an account and register your dayly incomes and ravenues.
+This is the front-end of an web application on which you can create an account and register your daily incomes and ravenues.
 Features:
 
 - Sign Up;
